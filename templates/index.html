@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idk what to call it</title>
+</head>
+<body>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
+<script>
+const socket = io.connect('http://' + document.domain + ":6787");
+ursinaPos = []
+
+socket.on("UrsinaPos", function(data){
+    console.log("Data got: ", data)
+    ursinaPos = data
+})
+</script>
+<script src="../taptapir/taptapir.js"></script>
+<script type="text/sunsnake">
+ASSETS_FOLDER = 'EAssets/'
+set_orientation('horizontal')
+set_background_color('rgb(1,1,1)')
+set_window_color('rgb(40,40,40)')
+
+def sendTaptapPos(pos):
+    socket.emit("updateTaptapPosition", pos)
+
+mainPlayer = Entity(scale=.075, color=color.blue, roundness=1,parent=camera.ui,y=-.1)
+
+otherPlayer = Entity(scale=.075, color=color.red, roundness=1,parent=camera.ui)
+
+def update():
+    if held_keys['w']:
+        mainPlayer.y+=.005
+    if held_keys['a']:
+        mainPlayer.x-=.005
+    if held_keys['s']:
+        mainPlayer.y-=.005
+    if held_keys['d']:
+        mainPlayer.x+=.005
+
+    sendTaptapPos(mainPlayer.position)
+
+    otherPlayer.position = ursinaPos
+
+
+</script>
+<script src="../taptapir/sunsnake_compiler.js"></script>
+</html>
